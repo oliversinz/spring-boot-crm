@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <th:block th:replace="fragments.html :: headBox(title = 'Home')"></th:block>
+
+    <body>
+
+        <div class="col-lg-8 mx-auto p-3 py-md-5">
+
+            <header th:replace="fragments.html :: mainNav(active = '')"></header>
+
+            <main>
+            <h1>Position aktualisieren</h1>
+            <div class="row m-4">
+                <form th:action="@{/orderitems/edit/{id} (id=${orderitem.id})}" th:object = "${orderitem}" method="POST">
+                   
+                  <div class="mb-3">
+                     <label for="inputBook" class="form-label">Buch auswählen</label>
+                     <div>
+                         <select th:field="*{book.id}">
+                             <option th:each="book : ${books}" th:text="${book.title}" th:value="${book.id}" ></option>
+                         </select>
+                     </div>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputCustomer" class="form-label">Kunde auswählen</label>
+                     <div>
+                         <select th:field="*{customer.id}">
+                             <option th:each="customer : ${customers}" th:text="${customer.companyName}" th:value="${customer.id}"></option>
+                         </select>
+                     </div>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputEmployee" class="form-label">Mitarbeiter auswählen</label>
+                     <div>
+                         <select th:field="*{employee.id}">
+                             <option th:each="employee : ${employees}" th:text="${employee.lastName}" th:value="${employee.id}"></option>
+                         </select>
+                     </div>
+                  </div>
+                   
+                  <div class="mb-3">
+                     <label for="inputQuantity" class="form-label">Anzahl</label>
+                     <input type="text" name="quantity"  th:field="*{quantity}" class="form-control" id="inputQuantity" placeholder="Anzahl eingeben" />
+                     <span th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputCommissionLevel" class="form-label">Provision</label>
+                     <input type="text" name="commissionLevel"  th:field="*{commissionLevel}" class="form-control" id="inputCommissionLevel" placeholder="Provision eingeben" />
+                     <span th:if="${#fields.hasErrors('commissionLevel')}" th:errors="*{commissionLevel}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputStartDate" class="form-label">Datum Start</label>
+                     <input type="date" name="startDate"  th:field="*{startDate}" class="form-control" id="inputStartDate" placeholder="Datum Start eingeben" />
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputEndDate" class="form-label">Datum Ende</label>
+                     <input type="date" name="endDate"  th:field="*{endDate}" class="form-control" id="inputEndDate" placeholder="Datum Ende eingeben" />
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+               </form>
+            </div>
+         </main>
+
+            <footer class="pt-5 my-5 text-muted border-top">
+                Created by the Cloudwards team &middot; &copy; 2022
+            </footer>
+
+        </div>
+
+    </body>
+
+</html>

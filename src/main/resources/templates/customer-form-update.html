@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <th:block th:replace="fragments.html :: headBox(title = 'Home')"></th:block>
+
+    <body>
+
+        <div class="col-lg-8 mx-auto p-3 py-md-5">
+
+            <header th:replace="fragments.html :: mainNav(active = '')"></header>
+
+            <main>
+            <h1>Kunde aktualisieren</h1>
+            <div class="row m-4">
+               <form th:action="@{/customers/edit/{id} (id=${customer.id})}" th:object = "${customer}" method="POST">
+                  <div class="mb-3">
+                     <label for="inputCompanyName" class="form-label">Kunde Firma</label>
+                     <input type="text" name="companyName"  th:field="*{companyName}" class="form-control" id="inputCompanyName" placeholder="Kunde Firma eingeben" />
+                     <span th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputFirstName" class="form-label">Kunde Vorname</label>
+                     <input type="text" name="firstName"  th:field="*{firstName}" class="form-control" id="inputFirstName" placeholder="Kunde Vorname eingeben" />
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputLastName" class="form-label">Kunde Nachname</label>
+                     <input type="text" name="lastName"  th:field="*{lastName}" class="form-control" id="inputLastName" placeholder="Kunde Nachname eingeben" />
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputSalutation" class="form-label">Kunde Anrede</label>
+                     <input type="text" name="salutation"  th:field="*{salutation}" class="form-control" id="inputSalutation" placeholder="Kunde Anrede eingeben" />
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputStreetAddress" class="form-label">Kunde Adresse</label>
+                     <input type="text" name="streetAddress"  th:field="*{streetAddress}" class="form-control" id="inputStreetAddress" placeholder="Kunde Adresse eingeben" />
+                     <span th:if="${#fields.hasErrors('streetAddress')}" th:errors="*{streetAddress}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputZipCode" class="form-label">Kunde PLZ</label>
+                     <input type="text" name="zipCode"  th:field="*{zipCode}" class="form-control" id="inputZipCode" placeholder="Kunde PLZ eingeben" />
+                     <span th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputCity" class="form-label">Kunde Ort</label>
+                     <input type="text" name="city"  th:field="*{city}" class="form-control" id="inputCity" placeholder="Kunde Ort eingeben" />
+                     <span th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputCountry" class="form-label">Kunde Land</label>
+                     <input type="text" name="country"  th:field="*{country}" class="form-control" id="inputCountry" placeholder="Kunde Land eingeben" />
+                     <span th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputPhoneNumber" class="form-label">Kunde Telefon</label>
+                     <input type="text" name="phoneNumber"  th:field="*{phoneNumber}" class="form-control" id="inputPhoneNumber" placeholder="Kunde Telefon eingeben" />
+                     <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputEmail" class="form-label">Kunde Email</label>
+                     <input type="text" name="email"  th:field="*{email}" class="form-control" id="inputEmail" placeholder="Kunde Email eingeben" />
+                     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+               </form>
+            </div>
+         </main>
+
+            <footer class="pt-5 my-5 text-muted border-top">
+                Created by the Cloudwards team &middot; &copy; 2022
+            </footer>
+
+        </div>
+
+    </body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+   xmlns:th="http://thymeleaf.org"
+   xmlns:sec="http://thymeleaf.org/thymeleaf-extras-springsecurity5">
+   <th:block th:replace="fragments.html :: headBox(title = 'Home')"></th:block>
+   <body>
+      <div class="col-lg-8 mx-auto p-3 py-md-5">
+         <header th:replace="fragments.html :: mainNav(active = '')"></header>
+         <main>
+            <h1>Kommisionsware Liste</h1>
+            <div class="row mb-4 mt-4">
+               <div class="table-responsive">
+                  <table class = "table table-striped">
+                     <thead class = "table-light">
+                        <tr>
+                           <th> Buch</th>
+                           <th> Kunde</th>
+                           <th> Mitarbeiter</th>
+                           <th> Anzahl</th>
+                           <th> Provision</th>
+                           <th> Datum Start</th>
+                           <th> Datum Ende</th>
+                           <th> </th>
+                           <th sec:authorize="hasRole('ADMIN')"> </th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr th:each = "orderitem: ${orderitems}">
+                           <td th:text = "${orderitem.book}"></td>
+                           <td th:text = "${orderitem.customer}"></td>
+                           <td th:text = "${orderitem.employee}"></td>
+                           <td th:text = "${orderitem.quantity}"></td>
+                           <td th:text = "${orderitem.commissionLevel}"></td>
+                           <td th:text = "${orderitem.startDate}"></td>
+                           <td th:text = "${orderitem.endDate}"></td>
+                           <td>
+                              <a th:href = "@{/orderitems/edit/{id}(id=${orderitem.id})}"
+                                 class = "btn btn-primary">Aktualisieren</a>
+                           </td>
+                           <td sec:authorize="hasRole('ADMIN')">
+                              <a th:href = "@{/orderitems/delete/{id}(id=${orderitem.id})}"
+                                 class = "btn btn-danger">Löschen</a>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+            <div class="row">
+               <div class = "col-lg-4">
+                  <a th:href = "@{/new-orderitem}" class = "btn btn-primary">Neue Position</a>
+               </div>
+            </div>
+         </main>
+         <footer class="pt-5 my-5 text-muted border-top">
+            Created by the Cloudwards team &middot; &copy; 2022
+         </footer>
+      </div>
+   </body>
+</html>

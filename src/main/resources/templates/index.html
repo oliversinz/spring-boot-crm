@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <th:block th:replace="fragments.html :: headBox(title = 'Home')"></th:block>
+
+    <body>
+
+        <div class="col-lg-8 mx-auto p-3 py-md-5">
+
+            <header th:replace="fragments.html :: mainNav(active = '')"></header>
+
+            <main>
+                <h1>Kommissionsware Verwaltung</h1>
+                <p class="fs-5 col-md-8">CRM Light für die Verwaltung von Mitarbeitern, Produkten, Kunden und Kommissionsware</p>
+
+                <hr class="col-3 col-md-2 mb-5 mt-5" />
+
+                <div class="row g-5">
+                    <div class="col-md-6">
+                        <h2>Anlegen neuer Datensätze</h2>
+                        <p>Bücher, Mitarbeiter und Kunden können über folgende Links angelegt werden:</p>
+                        <ul class="icon-list">
+                            <li><a th:href = "@{/new-book}" rel="noopener">Buch anlegen</a></li>
+                            <li><a th:href = "@{/new-employee}" rel="noopener">Mitarbeiter anlegen</a></li>
+                            <li><a th:href = "@{/new-customer}" rel="noopener">Kunde anlegen</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h2>Anlegen neuer Bestellungen</h2>
+                        <p>Kommissionsware kann entwerder direkt oder für einen bestehenden Kunden angelegt werden:</p>
+                        <ul class="icon-list">
+                            <li><a th:href = "@{/new-orderitem}">Position direkt anlegen</a></li>
+                            <li><a th:href = "@{/customers}">Position für Kunde anlegen</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="pt-5 my-5 text-muted border-top">
+                Created by the Cloudwards team &middot; &copy; 2022
+            </footer>
+
+        </div>
+
+    </body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <th:block th:replace="fragments.html :: headBox(title = 'Home')"></th:block>
+
+    <body>
+
+        <div class="col-lg-8 mx-auto p-3 py-md-5">
+
+            <header th:replace="fragments.html :: mainNav(active = '')"></header>
+
+            <main>
+            <h1>Mitarbeiter anlegen</h1>
+            <div class="row m-4">
+               <form th:action="@{/new-employee}" th:object = "${employee}" method="POST">
+                  <div class="mb-3">
+                     <label for="inputFirstName" class="form-label">Mitarbeiter Vorname</label>
+                     <input type="text" name="firstName"  th:field="*{firstName}" class="form-control" id="inputFirstName" placeholder="Mitarbeiter Vorname eingeben" />
+                     <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputLastName" class="form-label">Mitarbeiter Nachname</label>
+                     <input type="text" name="lastName"  th:field="*{lastName}" class="form-control" id="inputLastName" placeholder="Mitarbeiter Nachname eingeben" />
+                     <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger"></span>
+                  </div>
+                  <div class="mb-3">
+                     <label for="inputEmail" class="form-label">Mitarbeiter Email</label>
+                     <input type="text" name="email"  th:field="*{email}" class="form-control" id="inputEmail" placeholder="Mitarbeiter Email eingeben" />
+                     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+               </form>
+            </div>
+         </main>
+
+            <footer class="pt-5 my-5 text-muted border-top">
+                Created by the Cloudwards team &middot; &copy; 2022
+            </footer>
+
+        </div>
+
+    </body>
+
+</html>

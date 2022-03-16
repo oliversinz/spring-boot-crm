@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+   xmlns:th="http://thymeleaf.org"
+   xmlns:sec="http://thymeleaf.org/thymeleaf-extras-springsecurity5">
+   <th:block th:replace="fragments.html :: headBox(title = 'Home')"></th:block>
+   <body>
+      <div class="col-lg-8 mx-auto p-3 py-md-5">
+         <header th:replace="fragments.html :: mainNav(active = '')"></header>
+         <main>
+            <div class="row mb-4 mt-4">
+               <form class="row row-cols-lg-auto g-3 align-items-center" th:action="@{/customers/search}"  method="post">
+                  <div class="col-12">
+                     <label class="visually-hidden" for="title">Postleitzahl</label>
+                     <div class="input-group">
+                        <div class="input-group-text">Ergebnisse nach Postleitzahl</div>
+                        <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="Postleitzahl">
+                     </div>
+                  </div>
+                  <div class="col-12">
+                     <button type="submit" class="btn btn-light">Filtern</button>
+                  </div>
+               </form>
+            </div>
+            <h1>Kunden Liste</h1>
+            <div class="row mb-4 mt-4">
+               <div class="table-responsive">
+                  <table class = "table table-striped">
+                     <thead class = "table-light">
+                        <tr>
+                           <th> Kunde Firma</th>
+                           <th> Kunde Adresse</th>
+                           <th> Kunde PLZ</th>
+                           <th> Kunde Ort</th>
+                           <th> Kunde Telefon</th>
+                           <th> Kunde Email</th>
+                           <th> </th>
+                           <th> </th>
+                           <th sec:authorize="hasRole('ADMIN')"> </th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr th:each = "customer: ${customers}">
+                           <td th:text = "${customer.companyName}"></td>
+                           <td th:text = "${customer.streetAddress}"></td>
+                           <td th:text = "${customer.zipCode}"></td>
+                           <td th:text = "${customer.city}"></td>
+                           <td th:text = "${customer.phoneNumber}"></td>
+                           <td th:text = "${customer.email}"></td>
+                           <td>
+                              <a th:href = "@{/customers/new-order/{id}(id=${customer.id})}"
+                                 class = "btn btn-primary">Bestellung</a>
+                           </td>
+                           <td>
+                              <a th:href = "@{/customers/edit/{id}(id=${customer.id})}"
+                                 class = "btn btn-primary">Aktualisieren</a>
+                           </td>
+                           <td sec:authorize="hasRole('ADMIN')">
+                              <a th:href = "@{/customers/delete/{id}(id=${customer.id})}"
+                                 class = "btn btn-danger">Löschen</a>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+            <div class="row">
+               <div class = "col-lg-4">
+                  <a th:href = "@{/new-customer}" class = "btn btn-primary">Neuer Kunde</a>
+               </div>
+            </div>
+         </main>
+         <footer class="pt-5 my-5 text-muted border-top">
+            Created by the Cloudwards team &middot; &copy; 2022
+         </footer>
+      </div>
+   </body>
+</html>
