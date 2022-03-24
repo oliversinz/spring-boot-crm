@@ -21,6 +21,31 @@ public class BookWebController {
     private BookService bookService;
 
     /**
+     * get all Book objects as list
+     *
+     * @param model
+     * @return String
+     */
+    @GetMapping("/books")
+    public String getAllBooksList(Model model) {
+        model.addAttribute("books", bookService.getAllBooksList());
+        return "book-list-view";
+    }
+
+    /**
+     * get all Book objects as list, filtered by title
+     *
+     * @param title
+     * @param model
+     * @return String
+     */
+    @PostMapping("/books/search")
+    public String getBooksListFilteredTitle(@RequestParam("title") String title, Model model) {
+        model.addAttribute("books", bookService.getBooksListFilteredTitle(title));
+        return "book-list-view";
+    }
+
+    /**
      * create a new Book object, show form
      *
      * @param model
@@ -46,31 +71,6 @@ public class BookWebController {
         }
         bookService.createBook(bookDto);
         return "redirect:/books";
-    }
-
-    /**
-     * get all Book objects as list
-     *
-     * @param model
-     * @return String
-     */
-    @GetMapping("/books")
-    public String getAllBooksList(Model model) {
-        model.addAttribute("books", bookService.getAllBooksList());
-        return "book-list-view";
-    }
-
-    /**
-     * get all Book objects as list, filtered by title
-     *
-     * @param title
-     * @param model
-     * @return String
-     */
-    @PostMapping("/books/search")
-    public String getBooksListFilteredTitle(@RequestParam("title") String title, Model model) {
-        model.addAttribute("books", bookService.getBooksListFilteredTitle(title));
-        return "book-list-view";
     }
 
     /**

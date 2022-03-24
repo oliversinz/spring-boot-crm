@@ -6,6 +6,7 @@ import de.cloudwards.spring.crm.role.Role;
 import de.cloudwards.spring.crm.role.RoleRepository;
 import de.cloudwards.spring.crm.user.User;
 import de.cloudwards.spring.crm.user.UserRepository;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid SignUpDto signUpDto) {
 
         if (userRepository.existsByEmail(signUpDto.getEmail())) {
             return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);

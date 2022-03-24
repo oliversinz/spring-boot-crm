@@ -26,7 +26,7 @@ public class CustomerDto {
     @Size(min = 5, message = "mindestens 5 Zeichen")
     private String streetAddress;
 
-    @NotNull
+    @NotEmpty
     private String zipCode;
 
     @NotEmpty

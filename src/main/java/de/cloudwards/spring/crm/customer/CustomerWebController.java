@@ -21,6 +21,31 @@ public class CustomerWebController {
     private CustomerService customerService;
 
     /**
+     * get all Customer objects as list
+     *
+     * @param model
+     * @return String
+     */
+    @GetMapping("/customers")
+    public String getAllCustomersList(Model model) {
+        model.addAttribute("customers", customerService.getAllCustomersList());
+        return "customer-list-view";
+    }
+
+    /**
+     * get all Customer objects as list, filtered by companyName
+     *
+     * @param zipCode
+     * @param model
+     * @return String
+     */
+    @PostMapping("/customers/search")
+    public String getCustomersListFilteredZipCode(@RequestParam("zipCode") String zipCode, Model model) {
+        model.addAttribute("customers", customerService.getCustomersListFilteredZipCode(zipCode));
+        return "customer-list-view";
+    }
+
+    /**
      * create a new Customer object, show form
      *
      * @param model
@@ -46,31 +71,6 @@ public class CustomerWebController {
         }
         customerService.createCustomer(customerDto);
         return "redirect:/customers";
-    }
-
-    /**
-     * get all Customer objects as list
-     *
-     * @param model
-     * @return String
-     */
-    @GetMapping("/customers")
-    public String getAllCustomersList(Model model) {
-        model.addAttribute("customers", customerService.getAllCustomersList());
-        return "customer-list-view";
-    }
-
-    /**
-     * get all Customer objects as list, filtered by companyName
-     *
-     * @param companyName
-     * @param model
-     * @return String
-     */
-    @PostMapping("/customers/search")
-    public String getCustomersListFilteredZipCode(@RequestParam("zipCode") String zipCode, Model model) {
-        model.addAttribute("customers", customerService.getCustomersListFilteredZipCode(zipCode));
-        return "customer-list-view";
     }
 
     /**

@@ -21,6 +21,31 @@ public class EmployeeWebController {
     private EmployeeService employeeService;
 
     /**
+     * get all Employee objects as list
+     *
+     * @param model
+     * @return String
+     */
+    @GetMapping("/employees")
+    public String getAllEmployeesList(Model model) {
+        model.addAttribute("employees", employeeService.getAllEmployeesList());
+        return "employee-list-view";
+    }
+
+    /**
+     * get all Employee objects as list, filtered by lastName
+     *
+     * @param lastName
+     * @param model
+     * @return String
+     */
+    @PostMapping("/employees/search")
+    public String getEmployeesListFilteredLastName(@RequestParam("lastName") String lastName, Model model) {
+        model.addAttribute("employees", employeeService.getEmployeesListFilteredLastName(lastName));
+        return "employee-list-view";
+    }
+
+    /**
      * create a new Employee object, show form
      *
      * @param model
@@ -46,31 +71,6 @@ public class EmployeeWebController {
         }
         employeeService.createEmployee(employeeDto);
         return "redirect:/employees";
-    }
-
-    /**
-     * get all Employee objects as list
-     *
-     * @param model
-     * @return String
-     */
-    @GetMapping("/employees")
-    public String getAllEmployeesList(Model model) {
-        model.addAttribute("employees", employeeService.getAllEmployeesList());
-        return "employee-list-view";
-    }
-
-    /**
-     * get all Employee objects as list, filtered by lastName
-     *
-     * @param lastName
-     * @param model
-     * @return String
-     */
-    @PostMapping("/employees/search")
-    public String getEmployeesListFilteredLastName(@RequestParam("lastName") String lastName, Model model) {
-        model.addAttribute("employees", employeeService.getEmployeesListFilteredLastName(lastName));
-        return "employee-list-view";
     }
 
     /**
