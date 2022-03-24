@@ -18,7 +18,7 @@ public class OrderItemDto {
     private Integer quantity;
 
     @NotNull
-    private Double commissionLevel;
+    private Integer commissionLevel;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate startDate;
@@ -35,7 +35,7 @@ public class OrderItemDto {
     public OrderItemDto() {
     }
 
-    public OrderItemDto(Integer quantity, Double commissionLevel, LocalDate startDate, LocalDate endDate, BookDto book, CustomerDto customer, EmployeeDto employee) {
+    public OrderItemDto(Integer quantity, Integer commissionLevel, LocalDate startDate, LocalDate endDate, BookDto book, CustomerDto customer, EmployeeDto employee) {
         this.quantity = quantity;
         this.commissionLevel = commissionLevel;
         this.startDate = startDate;
@@ -61,11 +61,11 @@ public class OrderItemDto {
         this.quantity = quantity;
     }
 
-    public Double getCommissionLevel() {
+    public Integer getCommissionLevel() {
         return commissionLevel;
     }
 
-    public void setCommissionLevel(Double commissionLevel) {
+    public void setCommissionLevel(Integer commissionLevel) {
         this.commissionLevel = commissionLevel;
     }
 

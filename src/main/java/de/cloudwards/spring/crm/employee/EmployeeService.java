@@ -3,7 +3,6 @@ package de.cloudwards.spring.crm.employee;
 import de.cloudwards.spring.crm.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,27 +19,6 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private ModelMapper mapper;
-
-    /**
-     * create a new Employee object
-     *
-     * @param employeeDto
-     * @return EmployeeDto
-     */
-    public EmployeeDto createEmployee(EmployeeDto employeeDto) {
-
-        Employee employee = mapToEntity(employeeDto);
-
-        Employee newEmployee = employeeRepository.save(employee);
-
-        EmployeeDto employeeResponse = mapToDTO(newEmployee);
-
-        return employeeResponse;
-
-    }
-
     /**
      * get all Employee objects as EmployeeResponse
      *
@@ -48,7 +26,7 @@ public class EmployeeService {
      * @param pageSize
      * @param sortBy
      * @param sortDir
-     * @return
+     * @return EmployeeResponse
      */
     public EmployeeResponse getAllEmployees(int pageNo, int pageSize, String sortBy, String sortDir) {
 
@@ -61,7 +39,7 @@ public class EmployeeService {
 
         List<Employee> listOfEmployees = employees.getContent();
 
-        List<EmployeeDto> content = listOfEmployees.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
+        List<EmployeeDto> content = listOfEmployees.stream().map(employee -> EmployeeMapper.INSTANCE.outgoing(employee)).collect(Collectors.toList());
 
         EmployeeResponse employeeResponse = new EmployeeResponse();
         employeeResponse.setContent(content);
@@ -78,13 +56,13 @@ public class EmployeeService {
     /**
      * get all Employee objects as list
      *
-     * @return List<Employee>
+     * @return List<EmployeeDto>
      */
     public List<EmployeeDto> getAllEmployeesList() {
 
         List<Employee> listOfEmployees = employeeRepository.findAll();
 
-        return listOfEmployees.stream().map(element -> mapToDTO(element)).collect(Collectors.toList());
+        return listOfEmployees.stream().map(employee -> EmployeeMapper.INSTANCE.outgoing(employee)).collect(Collectors.toList());
 
     }
 
@@ -92,13 +70,13 @@ public class EmployeeService {
      * get all Employee objects as list, filtered by lastName
      *
      * @param search
-     * @return
+     * @return List<EmployeeDto>
      */
     public List<EmployeeDto> getEmployeesListFilteredLastName(String search) {
 
         List<Employee> listOfEmployees = employeeRepository.findByLastNameContaining(search);
 
-        return listOfEmployees.stream().map(element -> mapToDTO(element)).collect(Collectors.toList());
+        return listOfEmployees.stream().map(employee -> EmployeeMapper.INSTANCE.outgoing(employee)).collect(Collectors.toList());
 
     }
 
@@ -112,7 +90,25 @@ public class EmployeeService {
 
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee", "id", id));
 
-        return mapToDTO(employee);
+        return EmployeeMapper.INSTANCE.outgoing(employee);
+
+    }
+
+    /**
+     * create a new Employee object
+     *
+     * @param employeeDto
+     * @return EmployeeDto
+     */
+    public EmployeeDto createEmployee(EmployeeDto employeeDto) {
+
+        Employee employee = EmployeeMapper.INSTANCE.incoming(employeeDto);
+
+        Employee newEmployee = employeeRepository.save(employee);
+
+        EmployeeDto employeeResponse = EmployeeMapper.INSTANCE.outgoing(newEmployee);
+
+        return employeeResponse;
 
     }
 
@@ -133,7 +129,7 @@ public class EmployeeService {
 
         Employee updatedEmployee = employeeRepository.save(employee);
 
-        return mapToDTO(updatedEmployee);
+        return EmployeeMapper.INSTANCE.outgoing(updatedEmployee);
 
     }
 
@@ -148,28 +144,6 @@ public class EmployeeService {
 
         employeeRepository.delete(employee);
 
-    }
-
-    /**
-     * convert Entity to DTO
-     *
-     * @param employee
-     * @return EmployeeDto
-     */
-    private EmployeeDto mapToDTO(Employee employee) {
-        EmployeeDto employeeDto = mapper.map(employee, EmployeeDto.class);
-        return employeeDto;
-    }
-
-    /**
-     * convert DTO to entity
-     *
-     * @param employeeDto
-     * @return Employee
-     */
-    private Employee mapToEntity(EmployeeDto employeeDto) {
-        Employee employee = mapper.map(employeeDto, Employee.class);
-        return employee;
     }
 
 }

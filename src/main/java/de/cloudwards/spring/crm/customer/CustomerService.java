@@ -3,7 +3,6 @@ package de.cloudwards.spring.crm.customer;
 import de.cloudwards.spring.crm.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,27 +18,6 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
-
-    @Autowired
-    private ModelMapper mapper;
-
-    /**
-     * create a new Customer object
-     *
-     * @param customerDto
-     * @return CustomerDto
-     */
-    public CustomerDto createCustomer(CustomerDto customerDto) {
-
-        Customer customer = mapToEntity(customerDto);
-
-        Customer newCustomer = customerRepository.save(customer);
-
-        CustomerDto customerResponse = mapToDTO(newCustomer);
-
-        return customerResponse;
-
-    }
 
     /**
      * get all Customer objects as CustomerResponse
@@ -61,7 +39,7 @@ public class CustomerService {
 
         List<Customer> listOfCustomers = customers.getContent();
 
-        List<CustomerDto> content = listOfCustomers.stream().map(customer -> mapToDTO(customer)).collect(Collectors.toList());
+        List<CustomerDto> content = listOfCustomers.stream().map(customer -> CustomerMapper.INSTANCE.outgoing(customer)).collect(Collectors.toList());
 
         CustomerResponse customerResponse = new CustomerResponse();
         customerResponse.setContent(content);
@@ -78,13 +56,13 @@ public class CustomerService {
     /**
      * get all Customer objects as list
      *
-     * @return List<Customer>
+     * @return List<CustomerDto>
      */
     public List<CustomerDto> getAllCustomersList() {
 
         List<Customer> listOfCustomers = customerRepository.findAll();
 
-        return listOfCustomers.stream().map(element -> mapToDTO(element)).collect(Collectors.toList());
+        return listOfCustomers.stream().map(customer -> CustomerMapper.INSTANCE.outgoing(customer)).collect(Collectors.toList());
 
     }
 
@@ -92,13 +70,13 @@ public class CustomerService {
      * get all Customer objects as list, filtered by zipCode
      *
      * @param search
-     * @return List<Customer>
+     * @return List<CustomerDto>
      */
     public List<CustomerDto> getCustomersListFilteredZipCode(String search) {
 
         List<Customer> listOfCustomers = customerRepository.findByZipCodeContaining(search);
 
-        return listOfCustomers.stream().map(element -> mapToDTO(element)).collect(Collectors.toList());
+        return listOfCustomers.stream().map(customer -> CustomerMapper.INSTANCE.outgoing(customer)).collect(Collectors.toList());
 
     }
 
@@ -112,7 +90,25 @@ public class CustomerService {
 
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id));
 
-        return mapToDTO(customer);
+        return CustomerMapper.INSTANCE.outgoing(customer);
+
+    }
+
+    /**
+     * create a new Customer object
+     *
+     * @param customerDto
+     * @return CustomerDto
+     */
+    public CustomerDto createCustomer(CustomerDto customerDto) {
+
+        Customer customer = CustomerMapper.INSTANCE.incoming(customerDto);
+
+        Customer newCustomer = customerRepository.save(customer);
+
+        CustomerDto customerResponse = CustomerMapper.INSTANCE.outgoing(newCustomer);
+
+        return customerResponse;
 
     }
 
@@ -140,7 +136,7 @@ public class CustomerService {
 
         Customer updatedCustomer = customerRepository.save(customer);
 
-        return mapToDTO(updatedCustomer);
+        return CustomerMapper.INSTANCE.outgoing(updatedCustomer);
 
     }
 
@@ -155,28 +151,6 @@ public class CustomerService {
 
         customerRepository.delete(customer);
 
-    }
-
-    /**
-     * convert Entity to DTO
-     *
-     * @param customer
-     * @return CustomerDto
-     */
-    private CustomerDto mapToDTO(Customer customer) {
-        CustomerDto customerDto = mapper.map(customer, CustomerDto.class);
-        return customerDto;
-    }
-
-    /**
-     * convert DTO to entity
-     *
-     * @param customerDto
-     * @return Customer
-     */
-    private Customer mapToEntity(CustomerDto customerDto) {
-        Customer customer = mapper.map(customerDto, Customer.class);
-        return customer;
     }
 
 }

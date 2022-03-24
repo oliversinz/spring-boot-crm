@@ -1,8 +1,5 @@
 package de.cloudwards.spring.crm.order;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.cloudwards.spring.crm.book.Book;
 import de.cloudwards.spring.crm.customer.Customer;
 import de.cloudwards.spring.crm.employee.Employee;
@@ -23,9 +20,6 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @Table(name = "orderitems")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class OrderItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,7 +33,7 @@ public class OrderItem implements Serializable {
     private Integer quantity;
 
     @Column(name = "order_commission_level", nullable = false)
-    private Double commissionLevel;
+    private Integer commissionLevel;
 
     @Column(name = "order_start_date", nullable = true)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -50,24 +44,21 @@ public class OrderItem implements Serializable {
     private LocalDate endDate;
 
     @ManyToOne
-    @JsonBackReference(value = "book-order")
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
     @ManyToOne
-    @JsonBackReference(value = "customer-order")
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     @ManyToOne
-    @JsonBackReference(value = "employee-order")
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
     public OrderItem() {
     }
 
-    public OrderItem(Integer quantity, Double commissionLevel, LocalDate startDate, LocalDate endDate, Book book, Customer customer, Employee employee) {
+    public OrderItem(Integer quantity, Integer commissionLevel, LocalDate startDate, LocalDate endDate, Book book, Customer customer, Employee employee) {
         this.quantity = quantity;
         this.commissionLevel = commissionLevel;
         this.startDate = startDate;
@@ -77,7 +68,7 @@ public class OrderItem implements Serializable {
         this.employee = employee;
     }
 
-    public OrderItem(Long id, Integer quantity, Double commissionLevel, LocalDate startDate, LocalDate endDate, Book book, Customer customer, Employee employee) {
+    public OrderItem(Long id, Integer quantity, Integer commissionLevel, LocalDate startDate, LocalDate endDate, Book book, Customer customer, Employee employee) {
         this.id = id;
         this.quantity = quantity;
         this.commissionLevel = commissionLevel;
@@ -104,11 +95,11 @@ public class OrderItem implements Serializable {
         this.quantity = quantity;
     }
 
-    public Double getCommissionLevel() {
+    public Integer getCommissionLevel() {
         return commissionLevel;
     }
 
-    public void setCommissionLevel(Double commissionLevel) {
+    public void setCommissionLevel(Integer commissionLevel) {
         this.commissionLevel = commissionLevel;
     }
 

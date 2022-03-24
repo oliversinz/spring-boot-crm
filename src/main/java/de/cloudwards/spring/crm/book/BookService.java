@@ -3,7 +3,6 @@ package de.cloudwards.spring.crm.book;
 import de.cloudwards.spring.crm.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,27 +18,6 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
-    private ModelMapper mapper;
-
-    /**
-     * create a new Book object
-     *
-     * @param bookDto
-     * @return BookDto
-     */
-    public BookDto createBook(BookDto bookDto) {
-
-        Book book = mapToEntity(bookDto);
-
-        Book newBook = bookRepository.save(book);
-
-        BookDto bookResponse = mapToDTO(newBook);
-
-        return bookResponse;
-
-    }
 
     /**
      * get all Book objects as BookResponse
@@ -61,7 +39,7 @@ public class BookService {
 
         List<Book> listOfBooks = books.getContent();
 
-        List<BookDto> content = listOfBooks.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
+        List<BookDto> content = listOfBooks.stream().map(book -> BookMapper.INSTANCE.outgoing(book)).collect(Collectors.toList());
 
         BookResponse bookResponse = new BookResponse();
         bookResponse.setContent(content);
@@ -78,13 +56,13 @@ public class BookService {
     /**
      * get all Book objects as list
      *
-     * @return List<Book>
+     * @return List<BookDto>
      */
     public List<BookDto> getAllBooksList() {
 
         List<Book> listOfBooks = bookRepository.findAll();
 
-        return listOfBooks.stream().map(element -> mapToDTO(element)).collect(Collectors.toList());
+        return listOfBooks.stream().map(book -> BookMapper.INSTANCE.outgoing(book)).collect(Collectors.toList());
 
     }
 
@@ -92,13 +70,13 @@ public class BookService {
      * get all Book objects as list, filtered by title
      *
      * @param search
-     * @return List<Book>
+     * @return List<BookDto>
      */
     public List<BookDto> getBooksListFilteredTitle(String search) {
 
         List<Book> listOfBooks = bookRepository.findByTitleContaining(search);
 
-        return listOfBooks.stream().map(element -> mapToDTO(element)).collect(Collectors.toList());
+        return listOfBooks.stream().map(book -> BookMapper.INSTANCE.outgoing(book)).collect(Collectors.toList());
 
     }
 
@@ -112,7 +90,25 @@ public class BookService {
 
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
 
-        return mapToDTO(book);
+        return BookMapper.INSTANCE.outgoing(book);
+
+    }
+
+    /**
+     * create a new Book object
+     *
+     * @param bookDto
+     * @return BookDto
+     */
+    public BookDto createBook(BookDto bookDto) {
+
+        Book book = BookMapper.INSTANCE.incoming(bookDto);
+
+        Book newBook = bookRepository.save(book);
+
+        BookDto bookResponse = BookMapper.INSTANCE.outgoing(newBook);
+
+        return bookResponse;
 
     }
 
@@ -134,7 +130,7 @@ public class BookService {
 
         Book updatedBook = bookRepository.save(book);
 
-        return mapToDTO(updatedBook);
+        return BookMapper.INSTANCE.outgoing(updatedBook);
 
     }
 
@@ -149,28 +145,6 @@ public class BookService {
 
         bookRepository.delete(book);
 
-    }
-
-    /**
-     * convert Entity to DTO
-     *
-     * @param book
-     * @return BookDto
-     */
-    private BookDto mapToDTO(Book book) {
-        BookDto bookDto = mapper.map(book, BookDto.class);
-        return bookDto;
-    }
-
-    /**
-     * convert DTO to entity
-     *
-     * @param bookDto
-     * @return Book
-     */
-    private Book mapToEntity(BookDto bookDto) {
-        Book book = mapper.map(bookDto, Book.class);
-        return book;
     }
 
 }

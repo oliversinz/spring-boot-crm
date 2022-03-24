@@ -1,4 +1,4 @@
-package de.cloudwards.spring.crm.payload;
+package de.cloudwards.spring.crm.exception;
 
 import java.util.Date;
 

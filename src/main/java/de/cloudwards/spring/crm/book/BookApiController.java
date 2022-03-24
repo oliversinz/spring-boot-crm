@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,19 +24,6 @@ public class BookApiController {
 
     @Autowired
     private BookService bookService;
-
-    /**
-     * create a new Book object
-     *
-     * @param bookDto
-     * @return ResponseEntity<BookDto>
-     */
-    @PostMapping(path = "/books")
-    public ResponseEntity<BookDto> createBook(@Valid @RequestBody BookDto bookDto) {
-
-        return new ResponseEntity<>(bookService.createBook(bookDto), HttpStatus.CREATED);
-
-    }
 
     /**
      * get all Book objects as BookResponse
@@ -73,6 +59,19 @@ public class BookApiController {
     }
 
     /**
+     * create a new Book object
+     *
+     * @param bookDto
+     * @return ResponseEntity<BookDto>
+     */
+    @PostMapping(path = "/books")
+    public ResponseEntity<BookDto> createBook(@Valid @RequestBody BookDto bookDto) {
+
+        return new ResponseEntity<>(bookService.createBook(bookDto), HttpStatus.CREATED);
+
+    }
+
+    /**
      * update an existing Book object
      *
      * @param bookDto
@@ -94,7 +93,7 @@ public class BookApiController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/books/{id}")
     public ResponseEntity<String> deleteBookById(@PathVariable(name = "id") Long id) {
 

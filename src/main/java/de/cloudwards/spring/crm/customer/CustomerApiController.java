@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,19 +24,6 @@ public class CustomerApiController {
 
     @Autowired
     private CustomerService customerService;
-
-    /**
-     * create a new Customer object
-     *
-     * @param customerDto
-     * @return ResponseEntity<CustomerDto>
-     */
-    @PostMapping(path = "/customers")
-    public ResponseEntity<CustomerDto> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
-
-        return new ResponseEntity<>(customerService.createCustomer(customerDto), HttpStatus.CREATED);
-
-    }
 
     /**
      * get all Customer objects as CustomerResponse
@@ -73,6 +59,19 @@ public class CustomerApiController {
     }
 
     /**
+     * create a new Customer object
+     *
+     * @param customerDto
+     * @return ResponseEntity<CustomerDto>
+     */
+    @PostMapping(path = "/customers")
+    public ResponseEntity<CustomerDto> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
+
+        return new ResponseEntity<>(customerService.createCustomer(customerDto), HttpStatus.CREATED);
+
+    }
+
+    /**
      * update an existing Customer object
      *
      * @param id
@@ -94,7 +93,6 @@ public class CustomerApiController {
      * @param id
      * @return ResponseEntity<String>
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/customers/{id}")
     public ResponseEntity<String> deleteCustomerById(@PathVariable(name = "id") Long id) {
 

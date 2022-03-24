@@ -12,22 +12,14 @@ import de.cloudwards.spring.crm.role.Role;
 import de.cloudwards.spring.crm.role.RoleRepository;
 import de.cloudwards.spring.crm.user.User;
 import de.cloudwards.spring.crm.user.UserRepository;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 
     @Autowired
     private BookRepository bookRepository;
@@ -107,7 +99,7 @@ public class DataLoader implements CommandLineRunner {
         OrderItem orderItem1 = new OrderItem();
         orderItem1.setBook(book1);
         orderItem1.setQuantity(10);
-        orderItem1.setCommissionLevel(0.2);
+        orderItem1.setCommissionLevel(20);
         orderItem1.setCustomer(customer1);
         orderItem1.setEmployee(employee1);
         orderItem1.setStartDate(LocalDate.now());

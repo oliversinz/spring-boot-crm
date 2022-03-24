@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,19 +24,6 @@ public class EmployeeApiController {
 
     @Autowired
     private EmployeeService employeeService;
-
-    /**
-     * create a new Employee object
-     *
-     * @param employeeDto
-     * @return ResponseEntity<EmployeeDto>
-     */
-    @PostMapping(path = "/employees")
-    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
-
-        return new ResponseEntity<>(employeeService.createEmployee(employeeDto), HttpStatus.CREATED);
-
-    }
 
     /**
      * get all Employee objects as EmployeeResponse
@@ -73,6 +59,19 @@ public class EmployeeApiController {
     }
 
     /**
+     * create a new Employee object
+     *
+     * @param employeeDto
+     * @return ResponseEntity<EmployeeDto>
+     */
+    @PostMapping(path = "/employees")
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
+
+        return new ResponseEntity<>(employeeService.createEmployee(employeeDto), HttpStatus.CREATED);
+
+    }
+
+    /**
      * update an existing Employee object
      *
      * @param employeeDto
@@ -94,7 +93,6 @@ public class EmployeeApiController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/employees/{id}")
     public ResponseEntity<String> deleteEmployeeById(@PathVariable(name = "id") Long id) {
 

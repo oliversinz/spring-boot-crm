@@ -1,8 +1,5 @@
 package de.cloudwards.spring.crm.book;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.cloudwards.spring.crm.order.OrderItem;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,9 +18,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "books")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Book implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,7 +40,6 @@ public class Book implements Serializable {
     private Double price;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "book-order")
     private List<OrderItem> orders = new ArrayList<>();
 
     public Book() {

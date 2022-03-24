@@ -1,15 +1,25 @@
 package de.cloudwards.spring.crm.user;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 public class SignUpDto {
 
     private String firstName;
 
     private String lastName;
 
+    @NotEmpty
+    @Size(min = 4, message = "mindestens 4 Zeichen")
     private String username;
 
+    @NotEmpty
+    @Email
     private String email;
 
+    @NotEmpty
+    @Size(min = 8, message = "mindestens 8 Zeichen")
     private String password;
 
     public SignUpDto() {

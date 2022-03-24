@@ -11,7 +11,6 @@ import de.cloudwards.spring.crm.exception.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,64 +37,6 @@ public class OrderItemService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private ModelMapper mapper;
-
-    /**
-     * create a new orderItem object specifying bookId, customerId, employeeId
-     *
-     * @param bookId
-     * @param customerId
-     * @param employeeId
-     * @param orderItemDto
-     * @return OrderItemDto
-     */
-    public OrderItemDto createOrderItem(Long bookId, Long customerId, Long employeeId, OrderItemDto orderItemDto) {
-
-        OrderItem orderItem = mapToEntity(orderItemDto);
-
-        Book book = bookRepository.findById(bookId).orElseThrow(
-                () -> new ResourceNotFoundException("Book", "id", bookId));
-
-        Customer customer = customerRepository.findById(customerId).orElseThrow(
-                () -> new ResourceNotFoundException("Customer", "id", customerId));
-
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
-                () -> new ResourceNotFoundException("Employee", "id", employeeId));
-
-        orderItem.setBook(book);
-        orderItem.setCustomer(customer);
-        orderItem.setEmployee(employee);
-
-        OrderItem newOrderItem = orderItemRepository.save(orderItem);
-
-        return mapToDTO(newOrderItem);
-
-    }
-
-    /**
-     * create a new orderItem object specifying book, customer and employee
-     *
-     * @param book
-     * @param customer
-     * @param employee
-     * @param orderItemDto
-     * @return OrderItemDto
-     */
-    public OrderItemDto createOrderItemByObject(Book book, Customer customer, Employee employee, OrderItemDto orderItemDto) {
-
-        OrderItem orderItem = mapToEntity(orderItemDto);
-
-        orderItem.setBook(book);
-        orderItem.setCustomer(customer);
-        orderItem.setEmployee(employee);
-
-        OrderItem newOrderItem = orderItemRepository.save(orderItem);
-
-        return mapToDTO(newOrderItem);
-
-    }
-
     /**
      * get all orderItem objects as OrderItemResponse
      *
@@ -116,7 +57,7 @@ public class OrderItemService {
 
         List<OrderItem> listOfOrderItems = orderItems.getContent();
 
-        List<OrderItemDto> content = listOfOrderItems.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
+        List<OrderItemDto> content = listOfOrderItems.stream().map(orderItem -> OrderItemMapper.INSTANCE.outgoing(orderItem)).collect(Collectors.toList());
 
         OrderItemResponse orderItemResponse = new OrderItemResponse();
         orderItemResponse.setContent(content);
@@ -139,7 +80,7 @@ public class OrderItemService {
 
         List<OrderItem> orderItems = orderItemRepository.findAll();
 
-        return orderItems.stream().map(orderItem -> mapToDTO(orderItem)).collect(Collectors.toList());
+        return orderItems.stream().map(orderItem -> OrderItemMapper.INSTANCE.outgoing(orderItem)).collect(Collectors.toList());
 
     }
 
@@ -147,13 +88,13 @@ public class OrderItemService {
      * get all orderItem objects as list, filtered by bookId
      *
      * @param bookId
-     * @return
+     * @return List<OrderItemDto>
      */
     public List<OrderItemDto> getOrderItemsByBookId(Long bookId) {
 
         List<OrderItem> orderItems = orderItemRepository.findByBookId(bookId);
 
-        return orderItems.stream().map(orderItem -> mapToDTO(orderItem)).collect(Collectors.toList());
+        return orderItems.stream().map(orderItem -> OrderItemMapper.INSTANCE.outgoing(orderItem)).collect(Collectors.toList());
 
     }
 
@@ -161,13 +102,13 @@ public class OrderItemService {
      * get all orderItem objects as list, filtered by customerId
      *
      * @param customerId
-     * @return
+     * @return List<OrderItemDto>
      */
     public List<OrderItemDto> getOrderItemsByCustomerId(Long customerId) {
 
         List<OrderItem> orderItems = orderItemRepository.findByCustomerId(customerId);
 
-        return orderItems.stream().map(orderItem -> mapToDTO(orderItem)).collect(Collectors.toList());
+        return orderItems.stream().map(orderItem -> OrderItemMapper.INSTANCE.outgoing(orderItem)).collect(Collectors.toList());
 
     }
 
@@ -175,13 +116,13 @@ public class OrderItemService {
      * get all orderItem objects as list, filtered by employeeId
      *
      * @param employeeId
-     * @return
+     * @return List<OrderItemDto>
      */
     public List<OrderItemDto> getOrderItemsByEmployeeId(Long employeeId) {
 
         List<OrderItem> orderItems = orderItemRepository.findByEmployeeId(employeeId);
 
-        return orderItems.stream().map(orderItem -> mapToDTO(orderItem)).collect(Collectors.toList());
+        return orderItems.stream().map(orderItem -> OrderItemMapper.INSTANCE.outgoing(orderItem)).collect(Collectors.toList());
 
     }
 
@@ -195,7 +136,62 @@ public class OrderItemService {
 
         OrderItem orderItem = orderItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("OrderItem", "id", id));
 
-        return mapToDTO(orderItem);
+        return OrderItemMapper.INSTANCE.outgoing(orderItem);
+
+    }
+
+    /**
+     * create a new orderItem object specifying bookId, customerId, employeeId
+     *
+     * @param bookId
+     * @param customerId
+     * @param employeeId
+     * @param orderItemDto
+     * @return OrderItemDto
+     */
+    public OrderItemDto createOrderItem(Long bookId, Long customerId, Long employeeId, OrderItemDto orderItemDto) {
+
+        OrderItem orderItem = OrderItemMapper.INSTANCE.incoming(orderItemDto);
+
+        Book book = bookRepository.findById(bookId).orElseThrow(
+                () -> new ResourceNotFoundException("Book", "id", bookId));
+
+        Customer customer = customerRepository.findById(customerId).orElseThrow(
+                () -> new ResourceNotFoundException("Customer", "id", customerId));
+
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new ResourceNotFoundException("Employee", "id", employeeId));
+
+        orderItem.setBook(book);
+        orderItem.setCustomer(customer);
+        orderItem.setEmployee(employee);
+
+        OrderItem newOrderItem = orderItemRepository.save(orderItem);
+
+        return OrderItemMapper.INSTANCE.outgoing(newOrderItem);
+
+    }
+
+    /**
+     * create a new orderItem object specifying book, customer and employee
+     *
+     * @param book
+     * @param customer
+     * @param employee
+     * @param orderItemDto
+     * @return OrderItemDto
+     */
+    public OrderItemDto createOrderItemByObject(Book book, Customer customer, Employee employee, OrderItemDto orderItemDto) {
+
+        OrderItem orderItem = OrderItemMapper.INSTANCE.incoming(orderItemDto);
+
+        orderItem.setBook(book);
+        orderItem.setCustomer(customer);
+        orderItem.setEmployee(employee);
+
+        OrderItem newOrderItem = orderItemRepository.save(orderItem);
+
+        return OrderItemMapper.INSTANCE.outgoing(newOrderItem);
 
     }
 
@@ -204,7 +200,7 @@ public class OrderItemService {
      *
      * @param orderItemId
      * @param orderItemDtoRequest
-     * @return
+     * @return OrderItemDto
      */
     public OrderItemDto updateOrderItemById(Long orderItemId, OrderItemDto orderItemDtoRequest) {
 
@@ -218,7 +214,7 @@ public class OrderItemService {
 
         OrderItem updatedOrderItem = orderItemRepository.save(orderItem);
 
-        return mapToDTO(updatedOrderItem);
+        return OrderItemMapper.INSTANCE.outgoing(updatedOrderItem);
 
     }
 
@@ -273,28 +269,6 @@ public class OrderItemService {
 
         orderItemRepository.delete(orderItems.get(0));
 
-    }
-
-    /**
-     * convert Entity to DTO
-     *
-     * @param orderItem
-     * @return
-     */
-    private OrderItemDto mapToDTO(OrderItem orderItem) {
-        OrderItemDto orderItemDto = mapper.map(orderItem, OrderItemDto.class);
-        return orderItemDto;
-    }
-
-    /**
-     * convert Dto to Entity
-     *
-     * @param orderItemDto
-     * @return
-     */
-    private OrderItem mapToEntity(OrderItemDto orderItemDto) {
-        OrderItem orderItem = mapper.map(orderItemDto, OrderItem.class);
-        return orderItem;
     }
 
 }

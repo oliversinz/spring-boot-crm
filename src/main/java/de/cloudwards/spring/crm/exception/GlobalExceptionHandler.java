@@ -1,6 +1,5 @@
 package de.cloudwards.spring.crm.exception;
 
-import de.cloudwards.spring.crm.payload.ErrorDetails;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

@@ -6,7 +6,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,24 +27,6 @@ public class OrderItemApiController {
     private OrderItemService orderItemService;
 
     /**
-     * create a new orderItem object specifying bookId, customerId, employeeId
-     *
-     * @param bookId
-     * @param customerId
-     * @param employeeId
-     * @param orderItemDto
-     * @return ResponseEntity<OrderItemDto>
-     */
-    @PostMapping("/orders/{bookId}/{customerId}/{employeeId}")
-    public ResponseEntity<OrderItemDto> createOrderItem(
-            @PathVariable(value = "bookId") Long bookId,
-            @PathVariable(value = "customerId") Long customerId,
-            @PathVariable(value = "employeeId") Long employeeId,
-            @Valid @RequestBody OrderItemDto orderItemDto) {
-        return new ResponseEntity<>(orderItemService.createOrderItem(bookId, customerId, employeeId, orderItemDto), HttpStatus.CREATED);
-    }
-
-    /**
      * get all orderItem objects as OrderItemResponse
      *
      * @param pageNo
@@ -62,19 +43,6 @@ public class OrderItemApiController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
 
         return orderItemService.getAllOrderItems(pageNo, pageSize, sortBy, sortDir);
-
-    }
-
-    /**
-     * get one orderItem object
-     *
-     * @param id
-     * @return ResponseEntity<OrderItemDto>
-     */
-    @GetMapping("/orders/{id}")
-    public ResponseEntity<OrderItemDto> getOrderItemById(@PathVariable(name = "id") Long id) {
-
-        return new ResponseEntity<>(orderItemService.getOrderItemById(id), HttpStatus.OK);
 
     }
 
@@ -118,6 +86,37 @@ public class OrderItemApiController {
     }
 
     /**
+     * get one orderItem object
+     *
+     * @param id
+     * @return ResponseEntity<OrderItemDto>
+     */
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<OrderItemDto> getOrderItemById(@PathVariable(name = "id") Long id) {
+
+        return new ResponseEntity<>(orderItemService.getOrderItemById(id), HttpStatus.OK);
+
+    }
+
+    /**
+     * create a new orderItem object specifying bookId, customerId, employeeId
+     *
+     * @param bookId
+     * @param customerId
+     * @param employeeId
+     * @param orderItemDto
+     * @return ResponseEntity<OrderItemDto>
+     */
+    @PostMapping("/orders/{bookId}/{customerId}/{employeeId}")
+    public ResponseEntity<OrderItemDto> createOrderItem(
+            @PathVariable(value = "bookId") Long bookId,
+            @PathVariable(value = "customerId") Long customerId,
+            @PathVariable(value = "employeeId") Long employeeId,
+            @Valid @RequestBody OrderItemDto orderItemDto) {
+        return new ResponseEntity<>(orderItemService.createOrderItem(bookId, customerId, employeeId, orderItemDto), HttpStatus.CREATED);
+    }
+
+    /**
      * update an existing orderItem object
      *
      * @param orderItemId
@@ -140,7 +139,6 @@ public class OrderItemApiController {
      * @param orderItemId
      * @return ResponseEntity<String>
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/orders/{orderItemId}")
     public ResponseEntity<String> deleteOrderItem(@PathVariable(value = "orderItemId") Long orderItemId) {
 
@@ -158,7 +156,6 @@ public class OrderItemApiController {
      * @param employeeId
      * @return ResponseEntity<String>
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/orders/{bookId}/{customerId}/{employeeId}")
     public ResponseEntity<String> deleteOrderItemByRef(
             @PathVariable(value = "bookId") Long bookId,
