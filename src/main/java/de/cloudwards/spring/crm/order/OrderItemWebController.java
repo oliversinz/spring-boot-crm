@@ -36,6 +36,18 @@ public class OrderItemWebController {
     private EmployeeService employeeService;
 
     /**
+     * get all orderItem objects as list
+     *
+     * @param model
+     * @return String
+     */
+    @GetMapping("/orderitems")
+    public String getAllOrderItemsList(Model model) {
+        model.addAttribute("orderitems", orderItemService.getAllOrderItemsList());
+        return "order-list-view";
+    }
+
+    /**
      * create a new orderItem object, show form
      *
      * @param model
@@ -119,23 +131,11 @@ public class OrderItemWebController {
     }
 
     /**
-     * get all orderItem objects as list
-     *
-     * @param model
-     * @return
-     */
-    @GetMapping("/orderitems")
-    public String getAllOrderItemsList(Model model) {
-        model.addAttribute("orderitems", orderItemService.getAllOrderItemsList());
-        return "order-list-view";
-    }
-
-    /**
      * update an existing orderItem object, show form
      *
      * @param id
      * @param model
-     * @return
+     * @return String
      */
     @GetMapping("/orderitems/edit/{id}")
     public String getUpdateOrderItemForm(@PathVariable Long id, Model model) {
@@ -153,7 +153,7 @@ public class OrderItemWebController {
      * @param orderItemDto
      * @param result
      * @param model
-     * @return
+     * @return String
      */
     @PostMapping("/orderitems/edit/{id}")
     public String updateOrderItem(@PathVariable Long id, @Valid @ModelAttribute("orderitem") OrderItemDto orderItemDto,

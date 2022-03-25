@@ -1,10 +1,13 @@
 package de.cloudwards.spring.crm.order;
 
 import de.cloudwards.spring.crm.book.Book;
+import de.cloudwards.spring.crm.book.BookMapper;
 import de.cloudwards.spring.crm.book.BookRepository;
 import de.cloudwards.spring.crm.customer.Customer;
+import de.cloudwards.spring.crm.customer.CustomerMapper;
 import de.cloudwards.spring.crm.customer.CustomerRepository;
 import de.cloudwards.spring.crm.employee.Employee;
+import de.cloudwards.spring.crm.employee.EmployeeMapper;
 import de.cloudwards.spring.crm.employee.EmployeeRepository;
 import de.cloudwards.spring.crm.exception.APIException;
 import de.cloudwards.spring.crm.exception.ResourceNotFoundException;
@@ -206,6 +209,10 @@ public class OrderItemService {
 
         OrderItem orderItem = orderItemRepository.findById(orderItemId).orElseThrow(
                 () -> new ResourceNotFoundException("OrderItem", "id", orderItemId));
+
+        orderItem.setBook(BookMapper.INSTANCE.incoming(orderItemDtoRequest.getBook()));
+        orderItem.setCustomer(CustomerMapper.INSTANCE.incoming(orderItemDtoRequest.getCustomer()));
+        orderItem.setEmployee(EmployeeMapper.INSTANCE.incoming(orderItemDtoRequest.getEmployee()));
 
         orderItem.setCommissionLevel(orderItemDtoRequest.getCommissionLevel());
         orderItem.setEndDate(orderItemDtoRequest.getEndDate());
